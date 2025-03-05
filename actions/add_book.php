@@ -12,7 +12,7 @@ if (!$user || $user['role'] !== 'admin') {
 
 // Ensure form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $admin = new Admin($user['name'], $user['email'], $user['role']);
+    $admin = new Admin($user['id'],$user['name'], $user['email'], $user['role']);
     
     if ($admin->addBook($_POST['title'], $_POST['author'], $_POST['isbn'])) {
         echo "<script>alert('Book added successfully!'); window.location.href='../admin_dashboard.php';</script>";
