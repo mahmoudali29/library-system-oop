@@ -4,10 +4,10 @@ session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = User::login($_POST['email'], $_POST['password']);
-
     if ($user) {
         // Store only user data, not the entire object
         $_SESSION['user'] = [
+            'id' => $user->getId(), // ✅ Add user ID
             'name' => $user->getName(),
             'email' => $user->getEmail(),
             'role' => $user->getRole()

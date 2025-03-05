@@ -1,48 +1,35 @@
 <?php
 require_once '../config.php';
+require_once '../classes/Borrowable.php';
+require_once '../classes/Member.php';
+require_once '../classes/Admin.php';
 session_start();
 
-// Ensure user is logged in and is a member
+// Ensure user is logged in
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
-if (!$user || $user['role'] !== 'member') {
-    echo "<script>alert('Access Denied! Only members can borrow books.'); window.location.href='../login.php';</script>";
+if (!$user) {
+    echo "<script>alert('Access Denied! You need to log in.'); window.location.href='../login.php';</script>";
+    exit;
+}
+
+// Create the appropriate User object based on role
+if ($user['role'] === 'member') {
+    $borrower = new Member($user['id'],$user['name'], $user['email'], $user['role']);
+} elseif ($user['role'] === 'admin') {
+    $borrower = new Admin($user['id'],$user['name'], $user['email'], $user['role']);
+} else {
+    echo "<script>alert('Invalid user role.'); window.location.href='../login.php';</script>";
     exit;
 }
 
 // Ensure form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_id'])) {
     $bookId = $_POST['book_id'];
-    $userId = $user['id']; // Get user ID from session
 
-    try {
-        // Check if book is available
-        $stmt = $pdo->prepare("SELECT available FROM books WHERE id = ?");
-        $stmt->execute([$bookId]);
-        $book = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$book || !$book['available']) {
-            echo "<script>alert('Book is not available for borrowing.'); window.location.href='../member_dashboard.php';</script>";
-            exit;
-        }
-
-        // Mark book as borrowed
-        $pdo->beginTransaction();
-
-        // Insert into borrowed_books table
-        $stmt = $pdo->prepare("INSERT INTO borrowed_books (user_id, book_id) VALUES (?, ?)");
-        $stmt->execute([$userId, $bookId]);
-
-        // Update books table to mark it as unavailable
-        $stmt = $pdo->prepare("UPDATE books SET available = 0 WHERE id = ?");
-        $stmt->execute([$bookId]);
-
-        $pdo->commit();
-
-        echo "<script>alert('Book borrowed successfully!'); window.location.href='../member_dashboard.php';</script>";
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        echo "<script>alert('Error borrowing book: " . $e->getMessage() . "'); window.location.href='../member_dashboard.php';</script>";
-    }
+    // Call the polymorphic method
+    $message = $borrower->borrowBook($bookId);
+    
+    echo "<script>alert('$message'); window.location.href='../member_dashboard.php';</script>";
 } else {
     echo "<script>alert('Invalid request.'); window.location.href='../member_dashboard.php';</script>";
 }

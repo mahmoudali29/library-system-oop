@@ -8,6 +8,10 @@ class User {
     protected $role;
     protected $pdo; // This will NOT be serialized
 
+    public function getId() {
+        return $this->id;
+    }
+    
     public function getName() {
         return $this->name;
     }
@@ -20,8 +24,9 @@ class User {
         return $this->role;
     }
 
-    public function __construct($name, $email, $role) {
+    public function __construct($id,$name, $email, $role) {
         global $pdo;
+        $this->id = $id;
         $this->name = $name;
         $this->email = $email;
         $this->role = $role;
@@ -56,7 +61,7 @@ class User {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            return new self($user['name'], $user['email'], $user['role']);
+            return new self($user['id'],$user['name'], $user['email'], $user['role']);
         }
         return null;
     }
