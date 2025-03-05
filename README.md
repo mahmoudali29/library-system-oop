@@ -5,12 +5,36 @@ A simple **Library Management System** built with **PHP (OOP), MySQL, and Bootst
 ---
 
 ## **🚀 Features**
-✅ User authentication (Admin & Member)  
-✅ Admin can **add books**  
-✅ Members can **borrow books**  
-✅ Tracks borrowed books  
-✅ Uses **Bootstrap** for a responsive UI  
+✅ User authentication (**Admin & Member**)  
+✅ Admin can **add books** 📚  
+✅ Members can **borrow & return books** 🔄  
+✅ Uses **OOP principles** (Inheritance, Encapsulation, Polymorphism, Abstraction)  
 ✅ Secure database handling with **PDO & Transactions**  
+✅ Responsive UI with **Bootstrap**  
+
+---
+
+## **🎯 Object-Oriented Programming (OOP) in This Project**
+This system is designed following **OOP principles** for better structure and maintainability.
+
+### **1️⃣ Inheritance**
+- **Base Class:** `User.php`
+- **Child Classes:**  
+  - `Admin.php` _(inherits from `User` and can add books)_  
+  - `Member.php` _(inherits from `User` and can borrow/return books)_
+
+### **2️⃣ Encapsulation**
+- Protected/private properties **(`$name`, `$email`, `$role`)** ensure data is **secure**.
+- Methods like `register()`, `borrowBook()` **control how data is accessed**.
+
+### **3️⃣ Abstraction**
+- The **database handling is abstracted** into reusable methods.
+- Users interact with methods like `addBook()` instead of writing SQL directly.
+
+### **4️⃣ Polymorphism**
+- **Interface:** `Borrowable.php`  
+- **`Member.php` implements `Borrowable`** → Can borrow/return books.  
+- **`Admin.php` implements `Borrowable`** → Returns `"Admins cannot borrow books!"`.
 
 ---
 
