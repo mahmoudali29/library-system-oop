@@ -1,5 +1,6 @@
 <?php
 require_once 'User.php';
+require_once '../classes/Borrowable.php';
 
 class Admin extends User  implements Borrowable{
     public function addBook($title, $author, $isbn) {
