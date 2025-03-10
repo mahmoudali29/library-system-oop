@@ -36,6 +36,14 @@ This system is designed following **OOP principles** for better structure and ma
 - **`Member.php` implements `Borrowable`** → Can borrow/return books.  
 - **`Admin.php` implements `Borrowable`** → Returns `"Admins cannot borrow books!"`.
 
+| **OOP Concept**  | **How It’s Used in This Project** |
+|--------------|----------------------------------|
+| **Encapsulation** | Protects user data (name, email, role) inside the `User` class using **private/protected properties**. |
+| **Inheritance** | `Admin` and `Member` **inherit** from the `User` class and reuse its functionality. |
+| **Abstraction** | `User.php` **hides database logic** inside methods like `register()` and `login()`, so we only call them without knowing the internals. |
+| **Polymorphism** | `borrowBook()` works **differently** for `Admin` and `Member` using the `Borrowable` interface. |
+
+
 ---
 
 ## **🛠 Installation**
